@@ -1,22 +1,22 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Livewire\Volt\Volt;
+use App\Http\Controllers\UserController; // ✅ Corregido con mayúscula
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+// Mostrar formulario de registro
+Route::get('/', [UserController::class, 'inicio'])->name('usuario.inicio');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+// Crear nuevo usuario
+Route::post('/usuarios', [UserController::class, 'store'])->name('usuario.store'); 
 
-Route::middleware(['auth'])->group(function () {
-    Route::redirect('settings', 'settings/profile');
+// Ver todos los usuarios
+Route::get('/usuarios', [UserController::class, 'index'])->name('usuario.index');
 
-    Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
-    Volt::route('settings/password', 'settings.password')->name('settings.password');
-    Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
-});
+// Editar usuario
+Route::get('/usuarios/{id}/editar', [UserController::class, 'edit'])->name('usuario.edit');
 
-require __DIR__.'/auth.php';
+// Actualizar usuario
+Route::put('/usuarios/{id}', [UserController::class, 'update'])->name('usuario.update');
+
+// Eliminar usuario
+Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('usuario.destroy');
